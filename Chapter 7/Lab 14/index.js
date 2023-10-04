@@ -1,92 +1,125 @@
 function parseScores(scoresString) {
-    return scoresString.split(' ');
+  return scoresString.split(" ");
 }
 
 function buildDistributionArray(scoresArray) {
-    // Your code here
-    let grades = [0, 0, 0, 0, 0];
+  let distributionArray = [0, 0, 0, 0, 0];
 
-    for (let score of scoresArray) {
-        switch (true) {
-            case (score >= 90):
-                grades[0]++;
-                break;
-            case (score >= 80):
-                grades[1]++;
-                break;
-            case (score >= 70):
-                grades[2]++;
-                break;
-            case (score >= 60):
-                grades[3]++;
-                break;
-            case (score > 0):
-                grades[4]++;
-                break;
-        }
+  for (let score of scoresArray) {
+    let numericScore = parseInt(score);
+    if (numericScore >= 90) {
+      distributionArray[0]++;
+    } else if (numericScore >= 80) {
+      distributionArray[1]++;
+    } else if (numericScore >= 70) {
+      distributionArray[2]++;
+    } else if (numericScore >= 60) {
+      distributionArray[3]++;
+    } else {
+      distributionArray[4]++;
     }
+  }
 
-    return grades;
+  return distributionArray;
 }
 
 function setTableContent(userInput) {
-    // Your code here
-    let gradeCode = ['A', 'B', 'C', 'D', 'F'];
-    let arr = buildDistributionArray(parseScores(userInput));
+  let table = document.getElementById("distributionTable");
+  let scoresArray = parseScores(userInput);
+  let distributionArray = buildDistributionArray(scoresArray);
 
-    let table = document.getElementById('distributionTable');
+  table.innerHTML = "";
+  function setTableContent(userInput) {
+    let table = document.getElementById("distributionTable");
+    let scoresArray = parseScores(userInput);
+    let distributionArray = buildDistributionArray(scoresArray);
 
-    let barRow, labelRow, countRow;
-    let hasScores = false;
-    for (let i=0; i<arr.length; i++) {
-        if (arr[i] > 0) {
-            hasScores = true;
-            break;
-        }
+    table.innerHTML = "";
+
+    if (userInput.trim() === "") {
+      let firstRow = document.createElement("tr");
+      let td = document.createElement("td");
+      td.colSpan = "5";
+      td.textContent = "No graph to display";
+      firstRow.appendChild(td);
+      table.appendChild(firstRow);
+    } else {
+      let firstRow = document.createElement("tr");
+
+      for (let j = 0; j < distributionArray.length; j++) {
+        let gradeCount = distributionArray[j];
+        let div = document.createElement("div");
+        div.className = "bar" + j;
+        div.style.height = gradeCount * 10 + "px";
+        let td = document.createElement("td");
+        td.appendChild(div);
+        firstRow.appendChild(td);
+      }
+
+      let secondRow = document.createElement("tr");
+      let gradeLabels = ["A", "B", "C", "D", "F"];
+      for (let label of gradeLabels) {
+        let td = document.createElement("td");
+        td.textContent = label;
+        secondRow.appendChild(td);
+      }
+
+      let thirdRow = document.createElement("tr");
+      for (let gradeCount of distributionArray) {
+        let td = document.createElement("td");
+        td.textContent = gradeCount;
+        thirdRow.appendChild(td);
+      }
+
+      table.appendChild(firstRow);
+      table.appendChild(secondRow);
+      table.appendChild(thirdRow);
+    }
+  }
+
+  if (userInput.trim() === "") {
+    let firstRow = document.createElement("tr");
+    let td = document.createElement("td");
+    td.colSpan = "5";
+    td.textContent = "No graph to display";
+    firstRow.appendChild(td);
+    table.appendChild(firstRow);
+  } else {
+    let firstRow = document.createElement("tr");
+
+    for (let j = 0; j < distributionArray.length; j++) {
+      let gradeCount = distributionArray[j];
+      let div = document.createElement("div");
+      div.className = "bar" + j;
+      div.style.height = gradeCount * 10 + "px";
+      let td = document.createElement("td");
+      td.appendChild(div);
+      firstRow.appendChild(td);
     }
 
-    if (hasScores) {
-        barRow = document.createElement('tr');
-        labelRow = document.createElement('tr');
-        countRow = document.createElement('tr');
-
-        table.appendChild(barRow);
-        table.appendChild(labelRow);
-        table.appendChild(countRow);
-
-        for (let i=0; i < arr.length; i++) {
-            // If any row element isn't created        
-            let data = document.createElement('td');
-            let div = document.createElement('div');
-    
-            div.classList.add('bar' + i);
-            div.style.height = arr[i] * 10 + 'px';
-            
-            data.appendChild(div);
-            barRow.appendChild(data);
-    
-            let labelData = document.createElement('td');
-            labelData.appendChild(document.createTextNode(gradeCode[i]));
-    
-            labelRow.appendChild(labelData);
-    
-            let countData = document.createElement('td');
-            countData.appendChild(document.createTextNode(arr[i]));
-    
-            countRow.appendChild(countData);
-        }
+    let secondRow = document.createElement("tr");
+    let gradeLabels = ["A", "B", "C", "D", "F"];
+    for (let label of gradeLabels) {
+      let td = document.createElement("td");
+      td.textContent = label;
+      secondRow.appendChild(td);
     }
-    else {
-        // changing td -> tr breaks it from 9/10 to 3/10 like ????
-        let newElement = document.createElement('td');
-        newElement.appendChild(document.createTextNode('No graph to display'));
 
-        table.appendChild(newElement)
+    let thirdRow = document.createElement("tr");
+    for (let gradeCount of distributionArray) {
+      let td = document.createElement("td");
+      td.textContent = gradeCount;
+      thirdRow.appendChild(td);
     }
+
+    table.appendChild(firstRow);
+    table.appendChild(secondRow);
+    table.appendChild(thirdRow);
+  }
 }
 
 function bodyLoaded() {
-    // The argument passed to writeTableContent can be changed for 
-    // testing purposes
-    setTableContent("");
+  // The argument passed to writeTableContent can be changed for
+  // testing purposes
+  setTableContent("");
 }
