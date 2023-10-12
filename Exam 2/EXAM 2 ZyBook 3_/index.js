@@ -1,5 +1,15 @@
 function calcWordFrequencies() {
-  let input = propmpt();
+  let input = prompt("");
+  let words = input.split(" ");
+  
+  for(let word of words) {
+    let count = 0;
+    for (let i=0; i < words.length; i++) {
+      if (word === words[i]) {
+        count++;
+      }
+    }
 
-  let words = 
+    console.log(word + ' ' + count);
+  }
 }
